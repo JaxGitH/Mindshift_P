@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70a7d2ecd1c0507468a0284aef8f5848, type: 3}
+  m_Name: soRef
+  m_EditorClassIdentifier: 
+  physicsObjects: []
+  hazards: []
+  interactives: []
+  playerPrefab: {fileID: 3808286965206424289, guid: 374d9332de40f6944927cdff7d543584, type: 3}
+  enemyPrefab: {fileID: 0}
+  cameraPrefab: {fileID: 6445852155709395346, guid: 8f8bb6c2013d98944a8b817ca8d54e6d, type: 3}
