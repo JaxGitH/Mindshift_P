@@ -1,1 +1,0 @@
-These behaviors are for use with Basic projects, such as the A to B project. They can be placed on objects in more advanced projects, but their primary use was for the basic set of prefabs.
