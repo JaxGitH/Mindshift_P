@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11670c75979a5bb45b75cafb5a0146a1, type: 3}
+  m_Name: Balloon
+  m_EditorClassIdentifier: 
+  objName: Balloon
+  prefab: {fileID: 4324567319562102783, guid: f35bc7ff686f8534d9f084ea248aba14, type: 3}
+  behaviorDescription: 
+  isGrabbed: 0
+  usesGravity: 0
+  mass: 0
+  canAttachObjects: 1
+  isAttached: 0
+  floatStrength: 1
