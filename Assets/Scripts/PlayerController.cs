@@ -5,12 +5,14 @@ namespace Mindshift
     public class PlayerController : MonoBehaviour
     {
         private Rigidbody playerRb;
+        private BoxCollider playerCollider;
 
         [Header("Movement Settings")]
         [SerializeField] private float speed = 7f;
         [SerializeField] private float mantleHeight = 2.0f;
         [SerializeField] private float mantleDistance = 1.5f;
         [SerializeField] private float mantleSpeed = 5f;
+        [SerializeField] private float checkMantleHeight = 0.2f;
 
         [Header("Joystick Settings")]
         [SerializeField] public VJoystick joystick;
@@ -24,6 +26,14 @@ namespace Mindshift
         void Start()
         {
             playerRb = GetComponent<Rigidbody>();
+            playerCollider = GetComponent<BoxCollider>();
+
+            if (playerRb == null || playerCollider == null)
+            {
+                Debug.LogError("PlayerController requires a Rigidbody and BoxCollider!");
+                return;
+            }
+
             playerRb.freezeRotation = true;
         }
 
@@ -53,7 +63,10 @@ namespace Mindshift
         void CheckForMantle()
         {
             RaycastHit hit;
-            Vector3 rayOrigin = transform.position + Vector3.up * 0.75f;
+
+            // Dynamic ray origin based on the BoxCollider's dimensions
+            float rayStartHeight = playerCollider.bounds.center.y + (playerCollider.size.y / 2) * checkMantleHeight;
+            Vector3 rayOrigin = new Vector3(transform.position.x, rayStartHeight, transform.position.z);
             Vector3 rayDirection = transform.forward;
 
             Debug.DrawRay(rayOrigin, rayDirection * mantleDistance, Color.green);
@@ -65,7 +78,7 @@ namespace Mindshift
                 {
                     float objectHeight = hit.point.y - transform.position.y;
 
-                    if (objectHeight > 0 && objectHeight <= mantleable.GetMaxMantleHeight())
+                    if (objectHeight > 0 && objectHeight <= mantleHeight)
                     {
                         StartMantle(hit.collider.bounds.center + Vector3.up * mantleable.GetMantleOffset());
                         mantleable.OnMantle();
@@ -80,6 +93,9 @@ namespace Mindshift
             mantleTarget = targetPosition;
 
             playerRb.isKinematic = true;
+
+            // Disable the BoxCollider to prevent physics interactions
+            playerCollider.enabled = false;
         }
 
         void PerformMantle()
@@ -88,9 +104,17 @@ namespace Mindshift
 
             if (Vector3.Distance(transform.position, mantleTarget) < 0.1f)
             {
-                isMantling = false;
-                playerRb.isKinematic = false;
+                FinishMantle();
             }
+        }
+
+        void FinishMantle()
+        {
+            isMantling = false;
+            playerRb.isKinematic = false;
+
+            // Re-enable the BoxCollider after mantling
+            playerCollider.enabled = true;
         }
     }
 }
