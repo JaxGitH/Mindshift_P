@@ -1,26 +1,40 @@
+using Mindshift;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class LScr_PlayerController : MonoBehaviour
 {
     private Rigidbody playerRb;
+    private BoxCollider playerCollider;
 
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 7f; // Movement speed
-    [SerializeField] private float mantleHeight = 2.0f; // Max height for mantling
-    [SerializeField] private float mantleDistance = 1.5f; // Max distance for mantling
-    [SerializeField] private float mantleSpeed = 5f; // Speed of mantling movement
+    [SerializeField] private float speed = 7f;
+    [SerializeField] private float mantleHeight = 2.0f;
+    [SerializeField] private float mantleDistance = 1.5f;
+    [SerializeField] private float mantleSpeed = 5f;
+    [SerializeField] private float checkMantleHeight = 0.2f;
 
     [Header("Joystick Settings")]
-    //[SerializeField] public VJoystick joystick; // Drag your VJoystick prefab here
+    [SerializeField] public VJoystick joystick;
 
-    private bool isMantling = false; // Flag to track mantling state
-    private Vector3 mantleTarget; // Target position for mantling
+    [Header("Layer Settings")]
+    [SerializeField] private LayerMask Interactable;
+
+    private bool isMantling = false;
+    private Vector3 mantleTarget;
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
-        playerRb.freezeRotation = true; // Prevent Rigidbody from tipping over
+        playerCollider = GetComponent<BoxCollider>();
+
+        if (playerRb == null || playerCollider == null)
+        {
+            Debug.LogError("PlayerController requires a Rigidbody and BoxCollider!");
+            return;
+        }
+
+        playerRb.freezeRotation = true;
     }
 
     void Update()
@@ -36,102 +50,72 @@ public class LScr_PlayerController : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Handles movement restricted to Forward/Backward direction.
-    /// </summary>
     void HandleMovement()
     {
-        // Read joystick input
-        //float joystickVertical = joystick; // Forward/Backward from joystick
+        float joystickVertical = joystick.Vertical;
+        float keyboardVertical = Input.GetAxis("Vertical");
 
-        // Read keyboard input
-        float keyboardVertical = Input.GetAxis("Vertical"); // Forward/Backward from keyboard (W/S)
-
-        // Combine inputs
-        //float finalVertical = joystickVertical + keyboardVertical;
-
-        // Apply movement restricted to Z-axis (forward/backward only)
-        //Vector3 movement = new Vector3(0f, 0f, finalVertical);
-        //transform.Translate(movement.normalized * speed * Time.deltaTime);
+        float finalVertical = joystickVertical + keyboardVertical;
+        Vector3 movement = new Vector3(0f, 0f, finalVertical);
+        transform.Translate(movement.normalized * speed * Time.deltaTime);
     }
 
-    /// <summary>
-    /// Detects mantleable objects in front of the player using a raycast.
-    /// </summary>
     void CheckForMantle()
     {
         RaycastHit hit;
 
-        // Adjust origin closer to Player's chest
-        Vector3 rayOrigin = transform.position + Vector3.up * 0.75f;
+        // Dynamic ray origin based on the BoxCollider's dimensions
+        float rayStartHeight = playerCollider.bounds.center.y + (playerCollider.size.y / 2) * checkMantleHeight;
+        Vector3 rayOrigin = new Vector3(transform.position.x, rayStartHeight, transform.position.z);
         Vector3 rayDirection = transform.forward;
 
         Debug.DrawRay(rayOrigin, rayDirection * mantleDistance, Color.green);
 
-        if (Physics.Raycast(rayOrigin, rayDirection, out hit, mantleDistance))
+        if (Physics.Raycast(rayOrigin, rayDirection, out hit, mantleDistance, Interactable))
         {
-            if (hit.collider != null && hit.collider.CompareTag("Mantleable"))
+            Mantleable mantleable = hit.collider.GetComponent<Mantleable>();
+            if (mantleable != null)
             {
                 float objectHeight = hit.point.y - transform.position.y;
 
                 if (objectHeight > 0 && objectHeight <= mantleHeight)
                 {
-                    StartMantle(hit.collider.bounds.center);
+                    StartMantle(hit.collider.bounds.center + Vector3.up * mantleable.GetMantleOffset());
+                    mantleable.OnMantle();
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Starts the mantling process, setting the target position.
-    /// </summary>
     void StartMantle(Vector3 targetPosition)
     {
         isMantling = true;
-        mantleTarget = new Vector3(
-            transform.position.x,
-            targetPosition.y + 1.0f, // Adjust slightly above for smooth placement
-            transform.position.z
-        );
+        mantleTarget = targetPosition;
 
-        // Disable Rigidbody physics during mantling
         playerRb.isKinematic = true;
+
+        // Disable the BoxCollider to prevent physics interactions
+        playerCollider.enabled = false;
     }
 
-    /// <summary>
-    /// Smoothly moves the player to the mantle target position.
-    /// </summary>
     void PerformMantle()
     {
         transform.position = Vector3.MoveTowards(transform.position, mantleTarget, mantleSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, mantleTarget) < 0.1f)
         {
-            isMantling = false;
-            playerRb.isKinematic = false; // Re-enable physics after mantling
+            FinishMantle();
         }
     }
 
-    /// <summary>
-    /// Visual Debug Ray for Mantling Detection (Editor Only).
-    /// </summary>
-    private void OnDrawGizmos()
+    void FinishMantle()
     {
-        Gizmos.color = Color.green;
-        Vector3 rayOrigin = transform.position + Vector3.up * 1.0f;
-        Gizmos.DrawRay(rayOrigin, transform.forward * mantleDistance);
-    }
+        isMantling = false;
+        playerRb.isKinematic = false;
 
-    /// <summary>
-    /// Resets mantling state upon landing after falling or finishing a mantle.
-    /// </summary>
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.contacts.Length > 0 && collision.contacts[0].normal.y > 0.5f)
-        {
-            isMantling = false;
-            playerRb.isKinematic = false;
-        }
+        // Re-enable the BoxCollider after mantling
+        playerCollider.enabled = true;
     }
 }
+
 
