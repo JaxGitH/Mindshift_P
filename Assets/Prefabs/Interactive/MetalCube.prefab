@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 2273991333828317153}
   - component: {fileID: 5694803769117471390}
   - component: {fileID: 7762140775596292245}
+  - component: {fileID: -6741753174949567471}
   m_Layer: 0
   m_Name: MetalCube
   m_TagString: Mantleable
@@ -183,3 +184,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxMantleHeight: 2
   mantleOffset: 1
+--- !u!114 &-6741753174949567471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8547463808089583191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d60367685b5344da035a9cd951c14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

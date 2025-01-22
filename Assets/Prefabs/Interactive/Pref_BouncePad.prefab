@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1821580852202076456}
   - component: {fileID: 3799314470347846544}
   - component: {fileID: 3892809161690171295}
+  - component: {fileID: -2141325552302281848}
   m_Layer: 0
   m_Name: Pref_BouncePad
   m_TagString: Untagged
@@ -112,6 +113,18 @@ MonoBehaviour:
   targetTag: 
   restrictToVerticalMovement: 1
   allowPadMovement: 1
+--- !u!114 &-2141325552302281848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3276623034851214871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28d60367685b5344da035a9cd951c14c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5128617613367910605
 GameObject:
   m_ObjectHideFlags: 0

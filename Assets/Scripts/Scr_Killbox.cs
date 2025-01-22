@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class Scr_Killbox : MonoBehaviour
 {
-    [Header("List of Prefabs to Destroy")]
-    [Tooltip("Add the prefabs or objects that should be destroyed when they overlap with this trigger.")]
-    public GameObject[] destroyablePrefabs;
+    [Header("List of Tags to Destroy")]
+    [Tooltip("Add the tags of objects that should be destroyed when they overlap with this trigger.")]
+    [SerializeField] private string[] destroyableTags;
 
+    [Header("Trigger Options")]
     [Tooltip("Should this script destroy objects immediately on entering the trigger?")]
-    public bool destroyOnEnter = true;
+    [SerializeField] private bool destroyOnEnter = true;
 
     [Tooltip("Should this script destroy objects if they remain in the trigger?")]
-    public bool destroyOnStay = false;
+    [SerializeField] private bool destroyOnStay = false;
 
     [Tooltip("Should this script destroy objects if they exit the trigger?")]
-    public bool destroyOnExit = false;
+    [SerializeField] private bool destroyOnExit = false;
 
     private void Start()
     {
@@ -21,7 +22,7 @@ public class Scr_Killbox : MonoBehaviour
         Collider collider = GetComponent<Collider>();
         if (collider == null || !collider.isTrigger)
         {
-            Debug.LogError("The GameObject requires a Collider set as a Trigger for the TriggerDestroyer to work.");
+            Debug.LogError("The GameObject requires a Collider set as a Trigger for the Killbox to work.");
         }
     }
 
@@ -51,19 +52,18 @@ public class Scr_Killbox : MonoBehaviour
 
     private void CheckAndDestroy(GameObject obj)
     {
-        // Check if the object matches any prefab in the destroyablePrefabs array
-        foreach (GameObject prefab in destroyablePrefabs)
+        // Check if the object's tag is in the list of destroyable tags
+        foreach (string tag in destroyableTags)
         {
-            // Compare the object using its prefab
-            if (prefab != null && prefab.name == obj.name.Replace("(Clone)", "").Trim())
+            if (obj.CompareTag(tag))
             {
-                Destroy(obj); // Destroy the object
-                Debug.Log($"Destroyed {obj.name} because it matched a prefab in the array.");
-                return; // Exit the loop once destroyed
+                Destroy(obj);
+                Debug.Log($"Destroyed {obj.name} because its tag '{obj.tag}' is in the destroyable tags list.");
+                return; // Exit the loop and method once destroyed
             }
         }
 
-        // If the object is not in the array, it's safe
-        Debug.Log($"{obj.name} is safe and will not be destroyed.");
+        // If the object's tag is not in the list
+        Debug.Log($"{obj.name} is safe and will not be destroyed. Its tag is '{obj.tag}'.");
     }
 }
