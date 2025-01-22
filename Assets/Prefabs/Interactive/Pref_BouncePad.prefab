@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3799314470347846544}
   - component: {fileID: 3892809161690171295}
   - component: {fileID: -2141325552302281848}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pref_BouncePad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 9174125777243007875}
   - component: {fileID: 1065414089350891556}
   - component: {fileID: 6450430520314588705}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TempMesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}

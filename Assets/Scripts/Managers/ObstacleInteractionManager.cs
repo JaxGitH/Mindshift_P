@@ -10,6 +10,7 @@ namespace Mindshift
 
         private Camera mainCamera;
         private GameObject selectedObstacle;
+        private Rigidbody selectedRigidbody;
         private Vector3 offset;
 
         void Start()
@@ -42,6 +43,8 @@ namespace Mindshift
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, obstacleLayer))
                 {
                     selectedObstacle = hit.collider.gameObject;
+                    selectedRigidbody = selectedObstacle.GetComponent<Rigidbody>();
+                    selectedRigidbody.isKinematic = true;
                     offset = selectedObstacle.transform.position - GetMouseWorldPosition();
                 }
             }
@@ -58,6 +61,7 @@ namespace Mindshift
 
             if (Input.GetMouseButtonUp(0) && selectedObstacle != null) // Release
             {
+                selectedRigidbody.isKinematic = false;
                 selectedObstacle = null;
             }
         }
