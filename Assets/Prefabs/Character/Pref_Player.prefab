@@ -27,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4165290752499730315}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.70710677, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 12.33, y: 0.97, z: 0.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -99,6 +99,7 @@ MonoBehaviour:
   mantleHeight: 2
   mantleDistance: 1.5
   mantleSpeed: 5
+  checkMantleHeight: 0.2
   joystick: {fileID: 0}
   Interactable:
     serializedVersion: 2
